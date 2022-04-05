@@ -4,7 +4,7 @@ Simple Industry 4.0 scenario using:
 * [Apache IoTDB](https://iotdb.apache.org/)
 * [Apache Kafka](https://kafka.apache.org/)
 
-## PLC 
+## Siemens S7
 ![plc-config](docs/plc_config.png)
 
 ## Apache IoTDB
