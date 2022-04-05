@@ -1,4 +1,9 @@
 import java.io.Console;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -11,7 +16,28 @@ public class Main {
 
 	public static void main(String[] args) {
 		
+		// JDBC driver name and database URL
+	    String driver = "org.apache.iotdb.jdbc.IoTDBDriver";
+	    String url = "jdbc:iotdb://127.0.0.1:6667/";
+
+	    // Database credentials
+	    String username = "root";
+	    String password = "root";
+
+	    Connection connection = null;
+	    try {
+	      Class.forName(driver);
+	      connection = DriverManager.getConnection(url, username, password);
+	    } catch (ClassNotFoundException e) {
+	      e.printStackTrace();
+	    } catch (SQLException e) {
+	      e.printStackTrace();
+	    }
+	   
+	    
+		// S7 connection string
 		String connectionString = "s7://192.168.100.1";
+		
 		
 		try {
 			
@@ -38,7 +64,7 @@ public class Main {
 			builder.addItem("machine_state", "%DB1.DB0.0:INT");
 			builder.addItem("start_cmd", "%DB1.DB2.0:BOOL");
 			builder.addItem("stop_cmd", "%DB1.DB2.1:BOOL");
-			builder.addItem("actual_temperature", "%DB1.DB4.0:REAL");
+			builder.addItem("frequency", "%DB1.DB4.0:REAL");
 			
 			PlcReadRequest readRequest = builder.build();
 			
@@ -46,7 +72,22 @@ public class Main {
 			System.out.println("machine_state: " + response.getObject("machine_state"));
 			System.out.println("start_cmd: " + response.getObject("start_cmd"));
 			System.out.println("stop_cmd: " + response.getObject("stop_cmd"));
-			System.out.println("actual_temperature: " + response.getObject("actual_temperature"));
+			System.out.println("frequency: " + response.getObject("frequency"));
+			
+			Object value = (Float)response.getObject("frequency");
+			
+			
+			
+			// Insert into IoTDB
+		    try (PreparedStatement statement = connection.prepareStatement("INSERT INTO ? (TIMESTAMP, ?) VALUES (?, ?)")) {
+	            statement.setString(1, "root.energy.pac2200");
+	            statement.setString(2, "frequency");
+	            statement.setLong(3, System.currentTimeMillis());
+	            statement.setFloat(4,(float) value);
+	            statement.execute();
+	        } catch (SQLException e) {
+	            System.out.println(e.toString());
+	        }
 			
 			
 			

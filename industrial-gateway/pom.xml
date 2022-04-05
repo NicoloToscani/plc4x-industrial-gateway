@@ -31,6 +31,12 @@
         <scope>runtime</scope>
       </dependency>
       
+      <dependency>
+      <groupId>org.apache.iotdb</groupId>
+      <artifactId>iotdb-jdbc</artifactId>
+      <version>0.13.0</version>
+    </dependency>
+      
   </dependencies>
 
 
