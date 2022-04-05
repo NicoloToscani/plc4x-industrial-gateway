@@ -20,12 +20,12 @@ import org.apache.plc4x.java.utils.connectionpool.PooledPlcDriverManager;
 
 public class Main {
 
-	static Connection connection = null;
-	public static void main(String[] args) {
+	    static Connection connection = null;
+	    public static void main(String[] args) {
 		
 		
-		// Scraper: query scheduler
-		ScraperConfigurationTriggeredImplBuilder schedluer = new ScraperConfigurationTriggeredImplBuilder();
+	    // Scraper: query scheduler
+	    ScraperConfigurationTriggeredImplBuilder schedluer = new ScraperConfigurationTriggeredImplBuilder();
 		
 		
 		// JDBC driver name and database URL
