@@ -98,7 +98,7 @@ public class Main {
 			
 			Object value = (Float)response.getObject("frequency");
 			
-			// Insert into IoTDB
+			//  Insert into IoTDB
 		    try (PreparedStatement statement = connection.prepareStatement("INSERT INTO ? (TIMESTAMP, ?) VALUES (?, ?)")) {
 	            statement.setString(1, "root.energy.pac2200");
 	            statement.setString(2, "frequency");
