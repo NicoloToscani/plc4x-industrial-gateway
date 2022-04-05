@@ -117,28 +117,27 @@ public class Main {
 	            	
 	            	try {
 	            		
-						PlcReadResponse responsePolling = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
-						System.out.println("frequency polling: " + responsePolling.getObject("frequency"));
+				   PlcReadResponse responsePolling = readRequest.execute().get(5000, TimeUnit.MILLISECONDS);
+				   System.out.println("frequency polling: " + responsePolling.getObject("frequency"));
 						
-						// Insert into IoTDB - ToDo
+				   // Insert into IoTDB
+				   Object valueP = (Float)responsePolling.getObject("frequency");
 						
-						Object valueP = (Float)responsePolling.getObject("frequency");
-						
-						// Insert into IoTDB
-					    try (PreparedStatement statement = connection.prepareStatement("INSERT INTO ? (TIMESTAMP, ?) VALUES (?, ?)")) {
+			       // Insert into IoTDB
+		               try (PreparedStatement statement = connection.prepareStatement("INSERT INTO ? (TIMESTAMP, ?) VALUES (?, ?)")) {
 				            statement.setString(1, "root.energy.pac2200");
 				            statement.setString(2, "frequency");
 				            statement.setLong(3, System.currentTimeMillis());
 				            statement.setFloat(4,(float) valueP);
 				            statement.execute();
-				        } catch (SQLException e) {
+				} catch (SQLException e) {
 				            System.out.println(e.toString());
-				        }
+				}
 						
-					} catch (InterruptedException | ExecutionException | TimeoutException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		          } catch (InterruptedException | ExecutionException | TimeoutException e) {
+				 // TODO Auto-generated catch block
+				 e.printStackTrace();
+			}
 	           
 	            }, triggerCollector);
 	            scraper.start();
